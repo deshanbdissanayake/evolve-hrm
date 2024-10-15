@@ -29,6 +29,15 @@ Route::group(['middleware' => ['role:super-admin|admin']], function() {
 
     Route::resource('users', App\Http\Controllers\UserController::class);
     Route::get('users/{userId}/delete', [App\Http\Controllers\UserController::class, 'destroy']);
+
 });
+
+Route::group(['middleware' => ['role:super-admin|admin']], function() {
+    Route::get('/company', function () {
+        return view('company/company_info');
+    })->name('company.index');
+});
+
+
 
 require __DIR__.'/auth.php';

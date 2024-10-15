@@ -35,18 +35,8 @@
 
         <div id="layout-wrapper">
 
-            <!-- Page Heading
-            @isset($header)
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
-            -->
+            <!-- Top Bar and  Page Navigation -->
             @include('layouts.topbar')
-
-            <!-- Page Navigation -->
             @include('layouts.navigation')
 
             <div class="vertical-overlay"></div>
@@ -55,10 +45,23 @@
                 
                 <div class="page-content">
                     <div class="container-fluid">
-                        <!-- ============================================================== -->
-                        <!-- Content here -->
+
+                        <!-- start page title -->
+                        @isset($header)
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box d-sm-flex align-items-center justify-content-between bg-galaxy-transparent">
+                                    {{ $header }}
+                                </div>
+                            </div>
+                        </div>
+                        @endisset
+                        <!-- end page title -->
+
+                        <!-- start Content -->
                         {{ $slot }}
-                        <!-- ============================================================== -->
+                        <!-- end Content -->
+                        
                     </div>
                 </div>
     
@@ -66,11 +69,11 @@
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-sm-6">
-                                <script>document.write(new Date().getFullYear())</script> © Velzon.
+                                <script>document.write(new Date().getFullYear())</script> © Evolve.
                             </div>
                             <div class="col-sm-6">
                                 <div class="text-sm-end d-none d-sm-block">
-                                    Design & Develop by Themesbrand
+                                    Design & Develop by Evolve Technologies Pvt Ltd.
                                 </div>
                             </div>
                         </div>
