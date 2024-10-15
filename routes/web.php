@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\IndustryController;
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -29,6 +31,24 @@ Route::group(['middleware' => ['role:super-admin|admin']], function() {
 
     Route::resource('users', App\Http\Controllers\UserController::class);
     Route::get('users/{userId}/delete', [App\Http\Controllers\UserController::class, 'destroy']);
+
+    // Route::resource('industries', IndustryController::class);
+    // Route::post('industries/create', [IndustryController::class, 'update'])->name('industries.create');
+    // Route::patch('industries', [IndustryController::class, 'update'])->name('industries.update');
+    // Route::get('industries/{userId}/delete', [IndustryController::class, 'destroy']);
+
+
+
+    // Display all students
+Route::get('/industries', [IndustryController::class, 'index'])->name('industries.index');
+Route::get('/industries/create', [IndustryController::class, 'create'])->name('industries.create');
+Route::get('/industries/update/{id}', [IndustryController::class, 'update'])->name('industries.update');
+Route::get('/industries/edit', [IndustryController::class, 'edit'])->name('industries.edit');
+Route::get('/industries/delete/{id}', [IndustryController::class, 'delete'])->name('industries.delete');
+Route::get('/industries/{id}', [IndustryController::class, 'show'])->name('industries.show');
+
+
+
 });
 
 require __DIR__.'/auth.php';
