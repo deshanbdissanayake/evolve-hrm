@@ -45,10 +45,31 @@ Route::get('/industries/{id}', [IndustryController::class, 'show'])->name('indus
 
 });
 
+//views only - Desh(2024-10-16)
 Route::group(['middleware' => ['role:super-admin|admin']], function() {
     Route::get('/company', function () {
         return view('company/company_info');
     })->name('company.index');
+
+
+    Route::get('/location', function () {
+        return view('location/index');
+    })->name('location.index');
+
+
+    Route::get('/branch', function () {
+        return view('company/branch/index');
+    })->name('branch.index');
+    Route::get('/department', function () {
+        return view('company/department/index');
+    })->name('department.index');
+    Route::get('/division', function () {
+        return view('company/division/index');
+    })->name('division.index');
+    Route::get('/station', function () {
+        return view('company/station/index');
+    })->name('station.index');
+
 });
 
 

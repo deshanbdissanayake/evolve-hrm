@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Evolve HRM') }}</title>
+        <title>Evolve HRM</title>
 
         <meta content="Human Resource and Payroll Management System" name="description" />
         <meta content="Evolve Technologies Pvt Ltd" name="author" />
