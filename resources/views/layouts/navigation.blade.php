@@ -147,14 +147,35 @@
                 </li>    
 
                 <!-- Company -->
+                @php
+                    $checkCompanyNav = request()->routeIs('company.*') || request()->routeIs('location.*');
+                @endphp
+                
                 <li class="nav-item">
-                    <a class="nav-link menu-link {{ request()->routeIs('company.*') ? 'active' : '' }}" href="#company" data-bs-toggle="collapse" role="button" aria-expanded="{{ request()->routeIs('company.*') ? 'true' : 'false' }}">
+                    <a 
+                        class="nav-link menu-link {{ $checkCompanyNav ? 'active' : '' }}" 
+                        href="#company" 
+                        data-bs-toggle="collapse" 
+                        role="button" 
+                        aria-expanded="{{ $checkCompanyNav ? 'true' : 'false' }}"
+                    >
                         <i class="ri-building-line"></i> <span>Company</span>
                     </a>
-                    <div class="collapse menu-dropdown {{ request()->routeIs('company.*') ? 'show' : '' }}" id="company">
+                    <div 
+                        class="collapse menu-dropdown {{ $checkCompanyNav ? 'show' : '' }}" 
+                        id="company"
+                    >
                         <ul class="nav nav-sm flex-column">
-                            <li class="nav-item"><a href="{{ route('company.index') }}" class="nav-link {{ request()->routeIs('company.index') ? 'active' : '' }}">Company Information</a></li>
-                            <li class="nav-item"><a href="{{ route('location.index') }}" class="nav-link {{ request()->routeIs('location.index') ? 'active' : '' }}">Locations</a></li>
+                            <li class="nav-item">
+                                <a href="{{ route('company.index') }}" class="nav-link {{ request()->routeIs('company.index') ? 'active' : '' }}">
+                                    Company Information
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('location.index') }}" class="nav-link {{ request()->routeIs('location.index') ? 'active' : '' }}">
+                                    Locations
+                                </a>
+                            </li>
                             <li class="nav-item"><a href="#" class="nav-link">Branches/Departments</a></li>
                             <li class="nav-item"><a href="#" class="nav-link">Stations</a></li>
                             <li class="nav-item"><a href="#" class="nav-link">Designations</a></li>
@@ -164,6 +185,7 @@
                         </ul>
                     </div>
                 </li>
+                
 
                 <!-- Logout -->
                 <li class="nav-item">

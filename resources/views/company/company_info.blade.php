@@ -85,20 +85,11 @@
                             </div>   
 
                             <div class="col-xxl-3 col-md-6 mb-3">
-                                <!--
                                 <label for="country_id" class="form-label mb-1">Country</label>
                                 <select class="form-select" id="country_id">
                                     <option value="">Select Country</option>
                                     <option value="1">Country 1</option>
                                     <option value="2">Country 2</option>
-                                </select>
-                                -->
-                                <label for="country_id" class="form-label mb-1">Country</label>
-                                <select class="form-control" data-choices name="choices-single-default" id="choices-single-default">
-                                    <option value="">This is a placeholder</option>
-                                    <option value="Choice 1">Choice 1</option>
-                                    <option value="Choice 2">Choice 2</option>
-                                    <option value="Choice 3">Choice 3</option>
                                 </select>
                             </div>
                             <div class="col-xxl-3 col-md-6 mb-3">
