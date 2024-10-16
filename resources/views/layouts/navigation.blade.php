@@ -154,10 +154,11 @@
                     <div class="collapse menu-dropdown {{ request()->routeIs('company.*') ? 'show' : '' }}" id="company">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item"><a href="{{ route('company.index') }}" class="nav-link {{ request()->routeIs('company.index') ? 'active' : '' }}">Company Information</a></li>
-                            <li class="nav-item"><a href="#" class="nav-link">Designations</a></li>
+                            <li class="nav-item"><a href="{{ route('location.index') }}" class="nav-link {{ request()->routeIs('location.index') ? 'active' : '' }}">Locations</a></li>
                             <li class="nav-item"><a href="#" class="nav-link">Branches/Departments</a></li>
+                            <li class="nav-item"><a href="#" class="nav-link">Stations</a></li>
+                            <li class="nav-item"><a href="#" class="nav-link">Designations</a></li>
                             <li class="nav-item"><a href="#" class="nav-link">Wage Groups</a></li>
-                            <li class="nav-item"><a href="#" class="nav-link">Station</a></li>
                             <li class="nav-item"><a href="#" class="nav-link">Hierarchy</a></li>
                             <li class="nav-item"><a href="#" class="nav-link">Permission Groups</a></li>
                         </ul>
