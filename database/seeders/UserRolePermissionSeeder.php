@@ -17,25 +17,25 @@ class UserRolePermissionSeeder extends Seeder
     public function run(): void
     {
         // Create Permissions
-        Permission::create(['name' => 'view role']);
-        Permission::create(['name' => 'create role']);
-        Permission::create(['name' => 'update role']);
-        Permission::create(['name' => 'delete role']);
+        Permission::create(['name' => 'view role', 'type' => 'Roles']);
+        Permission::create(['name' => 'create role', 'type' => 'Roles']);
+        Permission::create(['name' => 'update role', 'type' => 'Roles']);
+        Permission::create(['name' => 'delete role', 'type' => 'Roles']);
 
-        Permission::create(['name' => 'view permission']);
-        Permission::create(['name' => 'create permission']);
-        Permission::create(['name' => 'update permission']);
-        Permission::create(['name' => 'delete permission']);
+        Permission::create(['name' => 'view permission', 'type' => 'Permission']);
+        Permission::create(['name' => 'create permission', 'type' => 'Permission']);
+        Permission::create(['name' => 'update permission', 'type' => 'Permission']);
+        Permission::create(['name' => 'delete permission', 'type' => 'Permission']);
 
-        Permission::create(['name' => 'view user']);
-        Permission::create(['name' => 'create user']);
-        Permission::create(['name' => 'update user']);
-        Permission::create(['name' => 'delete user']);
+        Permission::create(['name' => 'view user', 'type' => 'User']);
+        Permission::create(['name' => 'create user', 'type' => 'User']);
+        Permission::create(['name' => 'update user', 'type' => 'User']);
+        Permission::create(['name' => 'delete user', 'type' => 'User']);
 
-        Permission::create(['name' => 'view product']);
-        Permission::create(['name' => 'create product']);
-        Permission::create(['name' => 'update product']);
-        Permission::create(['name' => 'delete product']);
+        Permission::create(['name' => 'view product', 'type' => 'Product']);
+        Permission::create(['name' => 'create product', 'type' => 'Product']);
+        Permission::create(['name' => 'update product', 'type' => 'Product']);
+        Permission::create(['name' => 'delete product', 'type' => 'Product']);
 
 
         // Create Roles

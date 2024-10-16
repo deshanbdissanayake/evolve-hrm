@@ -25,21 +25,23 @@
                                 <span class="text-danger">{{ $message }}</span>
                                 @enderror
 
-                                <label for="">Permissions</label>
-
                                 <div class="row">
-                                    @foreach ($permissions as $permission)
-                                    <div class="col-md-2">
-                                        <label>
-                                            <input
-                                                type="checkbox"
-                                                name="permission[]"
-                                                value="{{ $permission->name }}"
-                                                {{ in_array($permission->id, $rolePermissions) ? 'checked':'' }}
-                                            />
-                                            {{ $permission->name }}
-                                        </label>
-                                    </div>
+                                    @foreach($permissions as $type => $permissionsGroup)
+                                        <h5 class="mt-3">{{ $type }}</h5>
+
+                                        @foreach ($permissionsGroup as $permission)
+                                        <div class="col-md-2">
+                                            <label>
+                                                <input
+                                                    type="checkbox"
+                                                    name="permission[]"
+                                                    value="{{ $permission->name }}"
+                                                    {{ in_array($permission->id, $rolePermissions) ? 'checked':'' }}
+                                                />
+                                                {{ $permission->name }}
+                                            </label>
+                                        </div>
+                                        @endforeach
                                     @endforeach
                                 </div>
 
