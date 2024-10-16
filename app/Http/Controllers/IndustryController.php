@@ -44,7 +44,7 @@ class IndustryController extends Controller
                 $data = [
                     'industry_name' => $request->industry_name,
                     'status' => 'active',
-                    'created_at' => date("Y-m-d H:i:s"),
+                    'created_date' => date("Y-m-d H:i:s"),
                     'created_by' => Auth::user()->id,
                 ];
                 //store the record in the transaction_classes table
@@ -72,7 +72,7 @@ class IndustryController extends Controller
      public function update(Request $request, $id)
      {
         $request->validate([
-            'name' => 'required',
+            'industry_name' => 'required',
             // 'company_id' => 'required',
         ]);
         $record = $this->industry->getSingleRecord($id);
@@ -107,7 +107,7 @@ class IndustryController extends Controller
             $data = [
                 'deleted_date' => date("Y-m-d H:i:s"),
                 'deleted_by' => Auth::user()->id,
-                'is_deleted' => 1,
+                'status'          => 'delete',
             ];
             $this->industry->destroyRecord($id, $data);
             return response()->json(['message' => 'Department Deleted Successfully',  'data' => ['id' => $id]], 200);
