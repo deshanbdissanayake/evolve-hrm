@@ -43,6 +43,13 @@ Route::get('/industries/delete/{id}', [IndustryController::class, 'delete'])->na
 Route::get('/industries/{id}', [IndustryController::class, 'show'])->name('industries.show');
 
 
+});
+
+Route::group(['middleware' => ['role:super-admin|admin']], function() {
+    Route::get('/company', function () {
+        return view('company/company_info');
+    })->name('company.index');
+});
 
 
 
