@@ -12,13 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('industries', function (Blueprint $table) {
-            $table->id('industry_id');
+            $table->id('id');
             $table->string('industry_name');
             $table->string('status')->nullable(); // Example: New field$table->dateTime('created_at');
-            $table->tinyInteger('created_by');
-            $table->tinyInteger('updated_by')->nullable();
-            $table->dateTime('deleted_at')->nullable();
-            $table->tinyInteger('deleted_by')->nullable();
+            $table->dateTime('created_date')->nullable();
+            $table->integer('created_by')->nullable();
+            $table->dateTime('updated_date')->nullable();
+            $table->integer('updated_by')->nullable();
+            $table->dateTime('deleted_date')->nullable();
+            $table->integer('deleted_by')->nullable();
             $table->timestamps();
         });
     }
