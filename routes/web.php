@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\IndustryController;
+use App\Http\Controllers\CompanyController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -36,11 +37,19 @@ Route::group(['middleware' => ['role:super-admin|admin']], function() {
 
     // Display all students
 Route::get('/industries', [IndustryController::class, 'index'])->name('industries.index');
-Route::get('/industries/create', [IndustryController::class, 'create'])->name('industries.create');
-Route::get('/industries/update/{id}', [IndustryController::class, 'update'])->name('industries.update');
+Route::post('/industries/create', [IndustryController::class, 'create'])->name('industries.create');
+Route::put('/industries/update/{id}', [IndustryController::class, 'update'])->name('industries.update');
 Route::get('/industries/edit', [IndustryController::class, 'edit'])->name('industries.edit');
-Route::get('/industries/delete/{id}', [IndustryController::class, 'delete'])->name('industries.delete');
+Route::delete('/industries/delete/{id}', [IndustryController::class, 'delete'])->name('industries.delete');
 Route::get('/industries/{id}', [IndustryController::class, 'show'])->name('industries.show');
+
+ // Display all students
+ Route::get('/companies', [CompanyController::class, 'index'])->name('companies.index');
+ Route::post('/companies/create', [CompanyController::class, 'create'])->name('companies.create');
+ Route::put('/companies/update/{id}', [CompanyController::class, 'update'])->name('companies.update');
+ Route::get('/companies/edit', [CompanyController::class, 'edit'])->name('companies.edit');
+ Route::delete('/companies/delete/{id}', [CompanyController::class, 'delete'])->name('companies.delete');
+ Route::get('/companies/{id}', [CompanyController::class, 'show'])->name('companies.show');
 
 
 });
