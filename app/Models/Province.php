@@ -18,12 +18,10 @@ class Province extends Model
         'province_name',
         'country_id',
         'status',
-        'created_date',
+        'created_at',
         'created_by',
-        'updated_date',
+        'updated_at',
         'updated_by',
-        'deleted_date',
-        'deleted_by',
     ];
 
     // Instance of CommonModel for reusable database operations

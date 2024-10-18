@@ -25,7 +25,7 @@
 
 <script>
 
-async function commonDeleteFunction(itemId, deleteUrl, itemName) {
+async function commonDeleteFunction(itemId, deleteUrl, itemName, $row) {
     // Show confirmation modal
     $('#delete_item_name').text(itemName);
     $('#delete_modal').modal('show');
@@ -35,27 +35,26 @@ async function commonDeleteFunction(itemId, deleteUrl, itemName) {
         try {
             // Send DELETE request using Fetch API
             const response = await fetch(`${deleteUrl}/${itemId}`, {
-                method: 'DELETE',  // Should be DELETE instead of GET
+                method: 'PUT',  // soft delete
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // CSRF token for Laravel
                 }
             });
 
-            const data = await response.json();  // Parse response JSON
+            const res = await response.json();  // Parse response JSON
 
             // Common operation: hide the modal
             $('#delete_modal').modal('hide');
 
             let icon = response.ok ? 'success' : 'warning';
-            let msg = response.ok ? data.message || `${itemName} deleted successfully!` : data.message || `Failed to delete ${itemName}`;
+            let msg = response.ok ? res.message || `${itemName} deleted successfully!` : res.message || `Failed to delete ${itemName}`;
             handleCommonDeleteResponse(icon, msg);
-
+            $row.remove();
         } catch (error) {
             let icon = 'error';
             let msg = `Error deleting ${itemName}`;
             handleCommonDeleteResponse(icon, msg);
-
             console.error('Error deleting the item:', error.message);
         }
     });

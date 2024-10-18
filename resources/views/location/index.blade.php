@@ -70,9 +70,12 @@
         // render tables
         //======================================================================================================
         let type = 'country';
+        let countries = [];
+        let provinces = [];
+        let cities = [];
 
         $(document).ready(function() {
-            renderTable(type);
+            initFunction();
         });
         
         // Handle button clicks for countries, provinces, and cities
@@ -80,18 +83,36 @@
             $('.type-btn').removeClass('btn-primary').addClass('btn-outline-primary');
             $(this).removeClass('btn-outline-primary').addClass('btn-primary');
             type = $(this).data('type');
-            renderTable(type);
+            renderTableBody(type);
         });
 
-        // Render table based on the type
-        async function renderTable(type) {
+        async function initFunction(){
+            await renderTableHeader(type);
+            countries = await fetchData(`/location/countries`);
+            provinces = await fetchData(`/location/provinces`);
+            cities = await fetchData(`/location/cities`);
+            await renderTableBody(type);
+        }
+
+        async function fetchData(url) {
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                return data?.data || [];
+            } catch (error) {
+                console.error(`Error fetching data from ${url}:`, error);
+                return [];
+            }
+        }
+
+        async function renderTableHeader(type){
             // Define table headings based on the type
             const tableHeadings = {
                 country: ['Country', 'Country Code'],
                 province: ['Country', 'Province'],
                 city: ['Province', 'City']
             };
-
+            
             // Dynamically set the table headers based on the type
             const head = `
                 <tr>
@@ -103,74 +124,53 @@
             `;
             $('#table_head').html(head);
             $('#table_body').html('<tr><td colspan="4" class="text-center">Loading...</td></tr>');
+        }
 
-            // Set the URL based on the type
-            const url = `url/${type}`;  // Assuming you have a different URL for each type
+        // Common function to generate table rows
+        function generateTableRows(items, type) {
+            return items.map((item, i) => {
+                const countryOrProvinceName = type === 'province' 
+                    ? countries.find(country => country.id === item.country_id)?.country_name 
+                    : type === 'city' 
+                    ? provinces.find(province => province.id === item.province_id)?.province_name 
+                    : '';
 
+                return `
+                    <tr type="${type}" id="${item.id}">
+                        <th scope="row">${i + 1}</th>
+                        <td>${type === 'country' ? item.country_name : countryOrProvinceName}</td>
+                        <td>${type === 'country' ? item.country_code : item[type === 'province' ? 'province_name' : 'city_name']}</td>
+                        <td>
+                            <button type="button" class="btn btn-info waves-effect waves-light btn-sm click_edit">
+                                <i class="ri-pencil-fill"></i>
+                            </button>
+                            <button type="button" class="btn btn-danger waves-effect waves-light btn-sm click_delete">
+                                <i class="ri-delete-bin-fill"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Render table based on the type
+        async function renderTableBody(type) {
             try {
-                const response = await fetch(url);
-                const data = await response.json();
+                let items = [];
+                if (type === 'country') {
+                    items = countries;
+                } else if (type === 'province') {
+                    items = provinces;
+                } else if (type === 'city') {
+                    items = cities;
+                }
 
-                // Early exit if no data
-                if (!data || data.length === 0) {
+                if (items.length === 0) {
                     $('#table_body').html('<tr><td colspan="4" class="text-center">No data available</td></tr>');
                     return;
                 }
 
-                // Generate the table rows dynamically based on the type
-                const list = data.map((item, i) => {
-                    if (type === 'country') {
-                        return `
-                            <tr type="${type}" id="${item.id}">
-                                <th scope="row">${i + 1}</th>
-                                <td>${item.country_name}</td>
-                                <td>${item.iso_code}</td>
-                                <td>
-                                    <button type="button" class="btn btn-info waves-effect waves-light btn-sm click_edit">
-                                        <i class="ri-pencil-fill"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-danger waves-effect waves-light btn-sm click_delete">
-                                        <i class="ri-delete-bin-fill"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        `;
-                    } else if (type === 'province') {
-                        return `
-                            <tr type="${type}" id="${item.id}">
-                                <th scope="row">${i + 1}</th>
-                                <td>${item.country_name}</td>
-                                <td>${item.province_name}</td>
-                                <td>
-                                    <button type="button" class="btn btn-info waves-effect waves-light btn-sm click_edit">
-                                        <i class="ri-pencil-fill"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-danger waves-effect waves-light btn-sm click_delete">
-                                        <i class="ri-delete-bin-fill"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        `;
-                    } else if (type === 'city') {
-                        return `
-                            <tr type="${type}" id="${item.id}">
-                                <th scope="row">${i + 1}</th>
-                                <td>${item.province_name}</td>
-                                <td>${item.city_name}</td>
-                                <td>
-                                    <button type="button" class="btn btn-info waves-effect waves-light btn-sm click_edit">
-                                        <i class="ri-pencil-fill"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-danger waves-effect waves-light btn-sm click_delete">
-                                        <i class="ri-delete-bin-fill"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        `;
-                    }
-                }).join('');  // Use `join` to concatenate all rows into a single string
-
-                // Update the table body with the generated list
+                const list = generateTableRows(items, type);
                 $('#table_body').html(list);
             } catch (error) {
                 $('#table_body').html('<tr><td colspan="4" class="text-center text-danger">Error loading data</td></tr>');
@@ -191,9 +191,9 @@
 
         async function deleteItem(type, id, $row) {
             const urls = {
-                country: '/country.delete',
-                province: '/province.delete',
-                city: '/city.delete'
+                country: '/location/country/delete',
+                province: '/location/province/delete',
+                city: '/location/city/delete'
             };
             
             const titles = {
@@ -202,14 +202,12 @@
                 city: 'City'
             };
 
+            // Ensure type is valid; default to 'country' if not found
             const url = urls[type] || urls['country'];
             const title = titles[type] || titles['country'];
 
             try {
-                const res = await commonDeleteFunction(id, url, title);
-                if (res.response) {
-                    $row.remove();
-                }
+                const res = await commonDeleteFunction(id, url, title, $row);
             } catch (error) {
                 console.error('Error deleting item:', error);
             }

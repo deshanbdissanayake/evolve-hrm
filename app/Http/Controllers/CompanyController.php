@@ -22,7 +22,7 @@ class CompanyController extends Controller
         $this->middleware('permission:update user', ['only' => ['update','edit']]);
         $this->middleware('permission:delete user', ['only' => ['destroy']]);
 
-        $this->company = new company();
+        $this->company = new Company();
         $this->common = new CommonModel();
     }
 
