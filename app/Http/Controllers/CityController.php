@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Industry;
+use App\Models\City;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\CommonModel;
 
-class IndustryController extends Controller
+class CityController extends Controller
 {
-    private $industry = null;
+    private $city = null;
     private $common = null;
 
     public function __construct()
@@ -22,36 +22,35 @@ class IndustryController extends Controller
         $this->middleware('permission:update user', ['only' => ['update','edit']]);
         $this->middleware('permission:delete user', ['only' => ['destroy']]);
 
-        $this->industry = new Industry();
+        $this->city = new City();
         $this->common = new CommonModel();
     }
-   
 
     public function index()
     {
-        $industries = Industry::all(); // Fetch all students
-        return view('industry.index', ['industries' => $industries]);
+        $cities = City::all(); // Fetch all students
+        return view('cities.index', ['cities' => $cities]);
     }
-     
-     public function create(Request $request)
+    public function create(Request $request)
      {
         try {
             return DB::transaction(function () use ($request) {
                 $request->validate([
-                    'industry_name' => 'required',
+                    'city_name' => 'required',
                     // 'company_id' => 'required',
                 ]);
                 $data = [
-                    'industry_name' => $request->industry_name,
+                    'city_name' => $request->city_name,
+                    'province_id' => $request->province_id,
                     'status' => 'active',
                     'created_date' => date("Y-m-d H:i:s"),
                     'created_by' => Auth::user()->id,
                 ];
                 //store the record in the transaction_classes table
-                $insertId = $this->industry->storeRecord($data);
+                $insertId = $this->city->storeRecord($data);
 
                 if ($insertId) {
-                    return response()->json(['message' => 'industry  Added Successfully' , 'data' => ['id' => $insertId]], 200);
+                    return response()->json(['message' => 'city  Added Successfully' , 'data' => ['id' => $insertId]], 200);
                 } else {
                     return response()->json(['message' => 'Error storing record', 'data' => [], 'error_code' => 500], 500);
                 }
@@ -61,59 +60,58 @@ class IndustryController extends Controller
         }
      }
 
-     
      public function edit($id)
      {
-         $student = Industry::findOrFail($id);
-         return 'industry.edit';
+         $student = City::findOrFail($id);
+         return 'cities.edit';
      }
  
      
      public function update(Request $request, $id)
      {
         $request->validate([
-            'industry_name' => 'required',
+            'country_name' => 'required',
             // 'company_id' => 'required',
         ]);
-        $record = $this->industry->getSingleRecord($id);
+        $record = $this->city->getSingleRecord($id);
         if ($record) {
             $data = [
-                'industry_name' => $request->industry_name,
+                'city_name' => $request->city_name,
+                'province_id' => $request->province_id,
                 'status' => $request->status,
                 'updated_date' => date("Y-m-d H:i:s"),
                 'updated_by' => Auth::user()->id,
             ];
-            $this->industry->updateRecord($id, $data);
-            return response()->json(['message' => 'Department Updated Successfully',  'data' => ['id' => $id]], 200);
+            $this->city->updateRecord($id, $data);
+            return response()->json(['message' => 'city Updated Successfully',  'data' => ['id' => $id]], 200);
         } else {
-            return response()->json(['message' => 'No Department Found', 'data' => []], 404);
+            return response()->json(['message' => 'No city Found', 'data' => []], 404);
         }
      }
 
      public function show($id)
      {
-        $data = $this->industry->getSingleRecord($id);
+        $data = $this->city->getSingleRecord($id);
         if ($data) {
-            return response()->json(['industries' => $data[0]], 200);
+            return response()->json(['city' => $data[0]], 200);
         } else {
-            return response()->json(['message' => 'No industry Found'], 404);
+            return response()->json(['message' => 'No city Found'], 404);
         }
      }
 
      public function delete($id)
      {
-        $record = $this->industry->getSingleRecord($id);
+        $record = $this->city->getSingleRecord($id);
         if ($record) {
             $data = [
                 'deleted_date' => date("Y-m-d H:i:s"),
                 'deleted_by' => Auth::user()->id,
                 'status'          => 'delete',
             ];
-            $this->industry->destroyRecord($id, $data);
-            return response()->json(['message' => 'Department Deleted Successfully',  'data' => ['id' => $id]], 200);
+            $this->city->destroyRecord($id, $data);
+            return response()->json(['message' => 'city Deleted Successfully',  'data' => ['id' => $id]], 200);
         } else {
-            return response()->json(['message' => 'No Department Found', 'data' => []], 404);
+            return response()->json(['message' => 'No city Found', 'data' => []], 404);
         }
      }
-    
 }

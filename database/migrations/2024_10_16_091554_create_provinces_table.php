@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('industries', function (Blueprint $table) {
-            $table->id('id');
-            $table->string('industry_name');
-            $table->string('status')->nullable(); // Example: New field$table->dateTime('created_at');
+        Schema::create('provinces', function (Blueprint $table) {
+            $table->id();
+            $table->string('province_name');
+            $table->unsignedBigInteger('country_id')->nullable(); 
+            $table->string('status')->nullable(); 
             $table->dateTime('created_date')->nullable();
             $table->integer('created_by')->nullable();
             $table->dateTime('updated_date')->nullable();
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('industries');
+        Schema::dropIfExists('provinces');
     }
 };

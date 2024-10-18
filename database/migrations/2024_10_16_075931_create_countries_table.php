@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('industries', function (Blueprint $table) {
-            $table->id('id');
-            $table->string('industry_name');
+        Schema::create('countries', function (Blueprint $table) {
+            $table->id();
+            $table->string('country_name');
+            $table->string('country_code');
             $table->string('status')->nullable(); // Example: New field$table->dateTime('created_at');
             $table->dateTime('created_date')->nullable();
             $table->integer('created_by')->nullable();
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('industries');
+        Schema::dropIfExists('countries');
     }
 };
