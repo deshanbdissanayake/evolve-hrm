@@ -239,10 +239,6 @@
                 title = 'Add Province';
                 list += `
                     <div class="col-xxl-6 col-md-6 mb-3">
-                        <label for="province_name" class="form-label mb-1 req">Province Name</label>
-                        <input type="text" class="form-control" id="province_name" placeholder="Enter Province Name" required>
-                    </div>
-                    <div class="col-xxl-6 col-md-6 mb-3">
                         <label for="country_id" class="form-label mb-1">Country</label>
                         <select class="form-select" id="country_id">
                             <option value="">Select Country</option>
@@ -250,14 +246,14 @@
                             <option value="2">Country 2</option>
                         </select>
                     </div>
+                    <div class="col-xxl-6 col-md-6 mb-3">
+                        <label for="province_name" class="form-label mb-1 req">Province Name</label>
+                        <input type="text" class="form-control" id="province_name" placeholder="Enter Province Name" required>
+                    </div>
                 `;
             }else{
                 title = 'Add City';
                 list += `
-                    <div class="col-xxl-6 col-md-6 mb-3">
-                        <label for="city_name" class="form-label mb-1 req">City Name</label>
-                        <input type="text" class="form-control" id="city_name" placeholder="Enter City Name" required>
-                    </div>
                     <div class="col-xxl-6 col-md-6 mb-3">
                         <label for="province_id" class="form-label mb-1">Province/State</label>
                         <select class="form-select" id="province_id">
@@ -267,6 +263,10 @@
                             <option value="3">Three</option>
                         </select>
                     </div> 
+                    <div class="col-xxl-6 col-md-6 mb-3">
+                        <label for="city_name" class="form-label mb-1 req">City Name</label>
+                        <input type="text" class="form-control" id="city_name" placeholder="Enter City Name" required>
+                    </div>
                 `;
             }
 
