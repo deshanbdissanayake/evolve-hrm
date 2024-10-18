@@ -72,7 +72,6 @@
         let type = 'country';
         let countries = [];
         let provinces = [];
-        let cities = [];
 
         $(document).ready(function() {
             initFunction();
@@ -88,21 +87,7 @@
 
         async function initFunction(){
             await renderTableHeader(type);
-            countries = await fetchData(`/location/countries`);
-            provinces = await fetchData(`/location/provinces`);
-            cities = await fetchData(`/location/cities`);
             await renderTableBody(type);
-        }
-
-        async function fetchData(url) {
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
-                return data?.data || [];
-            } catch (error) {
-                console.error(`Error fetching data from ${url}:`, error);
-                return [];
-            }
         }
 
         async function renderTableHeader(type){
@@ -129,17 +114,13 @@
         // Common function to generate table rows
         function generateTableRows(items, type) {
             return items.map((item, i) => {
-                const countryOrProvinceName = type === 'province' 
-                    ? countries.find(country => country.id === item.country_id)?.country_name 
-                    : type === 'city' 
-                    ? provinces.find(province => province.id === item.province_id)?.province_name 
-                    : '';
-
+                const firstCol = type === 'country' ? item.country_name : type === 'province' ? item.country_name : item.province_name;
+                const secondCol = type === 'country' ? item.country_code : item[type === 'province' ? 'province_name' : 'city_name'];
                 return `
                     <tr type="${type}" id="${item.id}">
                         <th scope="row">${i + 1}</th>
-                        <td>${type === 'country' ? item.country_name : countryOrProvinceName}</td>
-                        <td>${type === 'country' ? item.country_code : item[type === 'province' ? 'province_name' : 'city_name']}</td>
+                        <td>${firstCol}</td>
+                        <td>${secondCol}</td>
                         <td>
                             <button type="button" class="btn btn-info waves-effect waves-light btn-sm click_edit">
                                 <i class="ri-pencil-fill"></i>
@@ -158,11 +139,13 @@
             try {
                 let items = [];
                 if (type === 'country') {
-                    items = countries;
+                    items = await commonFetchData(`/location/countries`);
                 } else if (type === 'province') {
-                    items = provinces;
+                    countries = await commonFetchData(`/location/countries`);
+                    items = await commonFetchData(`/location/provinces`);
                 } else if (type === 'city') {
-                    items = cities;
+                    provinces = await commonFetchData(`/location/provinces`);
+                    items = await commonFetchData(`/location/cities`);
                 }
 
                 if (items.length === 0) {
@@ -208,76 +191,145 @@
 
             try {
                 const res = await commonDeleteFunction(id, url, title, $row);
+                if(res){
+                    renderTableBody(type)
+                }
             } catch (error) {
                 console.error('Error deleting item:', error);
             }
         }
 
         //======================================================================================================
-        // add items
+        // add/edit items
         //======================================================================================================
 
         $(document).on('click', '#add_new_btn', function(){
-            let title = 'Add';
-            let list = `<input type="hidden" id="location_type" value="${type}">`;
+            loadForm();
+        })
 
-            if(type === 'country'){
-                title = 'Add Country';
-                list += `
-                    <div class="col-xxl-6 col-md-6 mb-3">
-                        <label for="country_name" class="form-label mb-1 req">Country Name</label>
-                        <input type="text" class="form-control" id="country_name" placeholder="Enter Country Name" required>
-                    </div>
-                    <div class="col-xxl-6 col-md-6 mb-3">
-                        <label for="country_code" class="form-label mb-1 req">Country Code</label>
-                        <input type="text" class="form-control" id="country_code" placeholder="Enter Country Code" required>
-                    </div>  
-                `;
-            }else if(type === 'province'){
-                title = 'Add Province';
-                list += `
-                    <div class="col-xxl-6 col-md-6 mb-3">
-                        <label for="country_id" class="form-label mb-1">Country</label>
-                        <select class="form-select" id="country_id">
-                            <option value="">Select Country</option>
-                            <option value="1">Country 1</option>
-                            <option value="2">Country 2</option>
-                        </select>
-                    </div>
-                    <div class="col-xxl-6 col-md-6 mb-3">
-                        <label for="province_name" class="form-label mb-1 req">Province Name</label>
-                        <input type="text" class="form-control" id="province_name" placeholder="Enter Province Name" required>
-                    </div>
-                `;
+        $(document).on('click', '.click_edit', async function(){
+            let id = $(this).closest('tr').attr('id');
+            await loadForm(type, id);
+        })
+
+        $(document).on('click', '#location-submit-confirm', async function () {
+            const location_id = $('#location_id').val();
+            let url = '';
+            let formData = new FormData();
+
+            if (type === 'country') {
+                const country_name = $('#country_name').val();
+                const country_code = $('#country_code').val();
+
+                if (!country_name || !country_code) return;
+
+                url = '/location/country/create';
+                formData.append('country_name', country_name);
+                formData.append('country_code', country_code);
+            } 
+            else if (type === 'province') {
+                const country_id = $('#country_id').val();
+                const province_name = $('#province_name').val();
+
+                if (!country_id || !province_name) return;
+
+                url = '/location/province/create';
+                formData.append('country_id', country_id);
+                formData.append('province_name', province_name);
+            } 
+            else {
+                const province_id = $('#province_id').val();
+                const city_name = $('#city_name').val();
+
+                if (!province_id || !city_name) return;
+
+                url = '/location/city/create';
+                formData.append('province_id', province_id);
+                formData.append('city_name', city_name);
+            }
+
+            // Append common data
+            if (location_id) {
+                formData.append('location_id', location_id);
+            }
+
+            let res = await commonSaveData(url, formData);
+            
+            if(res.status === 'success'){
+                await commonAlert('success', res.message);
+                await renderTableBody(type);
             }else{
-                title = 'Add City';
-                list += `
-                    <div class="col-xxl-6 col-md-6 mb-3">
-                        <label for="province_id" class="form-label mb-1">Province/State</label>
-                        <select class="form-select" id="province_id">
-                            <option selected>Select Province</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
-                        </select>
-                    </div> 
-                    <div class="col-xxl-6 col-md-6 mb-3">
-                        <label for="city_name" class="form-label mb-1 req">City Name</label>
-                        <input type="text" class="form-control" id="city_name" placeholder="Enter City Name" required>
-                    </div>
-                `;
+                await commonAlert('error', res.message);
+            }
+            
+            $('#location-form-modal').modal('hide');
+
+        });
+
+        async function loadForm(type, id = "") {
+            let title = `${id === "" ? 'Add' : 'Edit'} ${type.charAt(0).toUpperCase() + type.slice(1)}`;
+            let list = `<input type="hidden" id="location_id" value="${id}">`;
+
+            let values = {};
+            if (id !== "") {
+                let data = await commonFetchData(`/location/${type}/${id}`);
+                if(data && data.length > 0){
+                    values = data[0];
+                }
+            }
+
+            switch (type) {
+                case 'country':
+                    list += `
+                        <div class="col-xxl-6 col-md-6 mb-3">
+                            <label for="country_name" class="form-label mb-1 req">Country Name</label>
+                            <input type="text" class="form-control" id="country_name" placeholder="Enter Country Name" value="${values.country_name || ''}" required>
+                        </div>
+                        <div class="col-xxl-6 col-md-6 mb-3">
+                            <label for="country_code" class="form-label mb-1 req">Country Code</label>
+                            <input type="text" class="form-control" id="country_code" placeholder="Enter Country Code" value="${values.country_code || ''}" required>
+                        </div>`;
+                    break;
+
+                case 'province':
+                    list += `
+                        <div class="col-xxl-6 col-md-6 mb-3">
+                            <label for="country_id" class="form-label mb-1">Country</label>
+                            <select class="form-select" id="country_id">
+                                <option value="">Select Country</option>
+                                ${countries.map(country => `<option value="${country.id}" ${country.id === values.country_id ? 'selected' : ''}>${country.country_name}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="col-xxl-6 col-md-6 mb-3">
+                            <label for="province_name" class="form-label mb-1 req">Province Name</label>
+                            <input type="text" class="form-control" id="province_name" placeholder="Enter Province Name" value="${values.province_name || ''}" required>
+                        </div>`;
+                    break;
+
+                case 'city':
+                    list += `
+                        <div class="col-xxl-6 col-md-6 mb-3">
+                            <label for="province_id" class="form-label mb-1">Province/State</label>
+                            <select class="form-select" id="province_id">
+                                <option value="">Select Province</option>
+                                ${provinces.map(province => `<option value="${province.id}" ${province.id === values.province_id ? 'selected' : ''}>${province.province_name}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="col-xxl-6 col-md-6 mb-3">
+                            <label for="city_name" class="form-label mb-1 req">City Name</label>
+                            <input type="text" class="form-control" id="city_name" placeholder="Enter City Name" value="${values.city_name || ''}" required>
+                        </div>`;
+                    break;
+
+                default:
+                    console.error("Unknown type:", type);
+                    return;
             }
 
             $('#location-form-title').html(title);
             $('#location-form-body').html(list);
             $('#location-form-modal').modal('show');
-
-        })
-
-        //======================================================================================================
-        // edit items
-        //======================================================================================================
-
+        }
 
 
     </script>

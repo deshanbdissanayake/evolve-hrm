@@ -30,10 +30,10 @@ class CommonModel extends Model
     // desh(2024-10-18)
     public function commonGetAll($table, $fields, $joinsArr = [], $whereArr = [], $exceptDel = false, $connections = [], $groupBy = null, $orderBy = null) {
     
-        $query = DB::table($table)->select("$fields, $table.status as status");
+        $query = DB::table($table)->select($fields);
     
         foreach ($joinsArr as $joinTable => $on) {
-            $query->leftJoin($joinTable, $on);
+            $query->leftJoin($joinTable, $on[0], $on[1], $on[2]);
         }
     
         foreach ($whereArr as $whereCol => $whereVal) {
@@ -90,10 +90,10 @@ class CommonModel extends Model
     // desh(2024-10-18)
     public function commonGetById($id, $idColumn, $table, $fields, $joinsArr = [], $whereArr = [], $exceptDel = false, $connections = [], $groupBy = null, $orderBy = null) {
     
-        $query = DB::table($table)->select("$fields, $table.status as status")->where($idColumn, $id);
+        $query = DB::table($table)->select($fields)->where($idColumn, $id);
     
         foreach ($joinsArr as $joinTable => $on) {
-            $query->leftJoin($joinTable, $on);
+            $query->leftJoin($joinTable, $on[0], $on[1], $on[2]);
         }
     
         foreach ($whereArr as $whereCol => $whereVal) {
@@ -187,30 +187,34 @@ class CommonModel extends Model
     }
     
     // desh(2024-10-18)
-    public function commonSave($table, $inputArr, $title, $id = null, $idColumn = null, $inputType = null, $createdBy = true, $updatedBy = true, $recordLog = true) {
+    public function commonSave($table, $inputArr, $id = null, $idColumn = null, $createdBy = true, $updatedBy = true, $recordLog = true) {
         $type = $id ? 'updated' : 'added';
 
-        if ($createdBy) {
-            $type === 'added' && $inputArr['created_by'] = Auth::user()->id;
-        }
-
-        if ($updatedBy) {
-            $inputArr['updated_by'] = Auth::user()->id;
-        }
+        try {
+            if ($createdBy) {
+                $type === 'added' && $inputArr['created_by'] = Auth::user()->id;
+            }
     
-        if ($type === 'updated') {
-            $re = DB::table($table)->where($idColumn, $id)->update($inputArr);
-            $id = $re ? $id : -1;
-        } else {
-            $re = DB::table($table)->insert($inputArr);
-            $id = $re ? DB::getPdo()->lastInsertId() : -1;
+            if ($updatedBy) {
+                $inputArr['updated_by'] = Auth::user()->id;
+            }
+        
+            if ($type === 'updated') {
+                $re = DB::table($table)->where($idColumn, $id)->update($inputArr);
+                $id = $re ? $id : -1;
+            } else {
+                $re = DB::table($table)->insert($inputArr);
+                $id = $re ? DB::getPdo()->lastInsertId() : -1;
+            }
+        
+            if ($recordLog) {
+                //save in activity log
+            }
+        
+            return $id;
+        } catch (\Throwable $th) {
+            return false;
         }
-    
-        if ($recordLog) {
-            //save in activity log
-        }
-    
-        return $id;
     }
    
     // desh(2024-10-18)

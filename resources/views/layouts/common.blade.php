@@ -25,7 +25,8 @@
 
 <script>
 
-async function commonDeleteFunction(itemId, deleteUrl, itemName, $row) {
+//desh(2024-10-18)
+async function commonDeleteFunction(itemId, deleteUrl, itemName, $row = null) {
     // Show confirmation modal
     $('#delete_item_name').text(itemName);
     $('#delete_modal').modal('show');
@@ -49,23 +50,74 @@ async function commonDeleteFunction(itemId, deleteUrl, itemName, $row) {
 
             let icon = response.ok ? 'success' : 'warning';
             let msg = response.ok ? res.message || `${itemName} deleted successfully!` : res.message || `Failed to delete ${itemName}`;
-            handleCommonDeleteResponse(icon, msg);
-            $row.remove();
+            commonAlert(icon, msg);
+            if (response.ok && $row) {
+                $row.remove();
+            }
+            return response.ok;
         } catch (error) {
             let icon = 'error';
             let msg = `Error deleting ${itemName}`;
-            handleCommonDeleteResponse(icon, msg);
+            commonAlert(icon, msg);
             console.error('Error deleting the item:', error.message);
+            return false;
         }
     });
 }
 
+//desh(2024-10-18)
+async function commonFetchData(url) {
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        return data?.data || [];
+    } catch (error) {
+        console.error(`Error fetching data from ${url}:`, error);
+        return [];
+    }
+}
 
+//desh(2024-10-18)
+async function commonSaveData(url, formData) {
+    let errorResponse = {
+        status: 'error',
+        message: 'Something went wrong!',
+        data: []
+    };
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',              // Set the method to POST
+            body: formData,              // Send the FormData
+            headers: {
+                'Accept': 'application/json',  // Ensure the server responds with JSON
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // CSRF token for Laravel
+            }
+        });
+
+        // Check if the response status is OK (HTTP 2xx)
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();   // Parse the response to JSON
+        // Return the actual data or fallback to error response if the structure is unexpected
+        return data || errorResponse;
+
+    } catch (error) {
+        console.error(`Error fetching data from ${url}:`, error);
+        return errorResponse;
+    }
+}
+
+
+
+//desh(2024-10-18)
 // Function to handle showing success or error messages
-function handleCommonDeleteResponse(icon, msg) {
+function commonAlert(icon, msg) {
     Swal.fire({
         position: "top-end",
-        icon: icon,
+        icon: icon, // success/warning/info/error
         title: msg,
         showConfirmButton: false,
         timer: 1500,

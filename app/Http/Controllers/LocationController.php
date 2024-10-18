@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Country;
-use App\Models\Province;
-use App\Models\City;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
@@ -14,9 +11,6 @@ use App\Models\CommonModel;
 
 class LocationController extends Controller
 {
-    private $country = null;
-    private $province = null;
-    private $city = null;
     private $common = null;
 
     public function __construct()
@@ -36,9 +30,6 @@ class LocationController extends Controller
         $this->middleware('permission:update user', ['only' => ['updateCountry', 'updateProvince', 'updateCity']]);
         $this->middleware('permission:delete user', ['only' => ['deleteCountry', 'deleteProvince', 'deleteCity']]);
 
-        $this->country = new Country();
-        $this->province = new Province();
-        $this->city = new City();
         $this->common = new CommonModel();
     }
 
@@ -58,14 +49,16 @@ class LocationController extends Controller
                     'country_name' => 'required',
                     'country_code' => 'required',
                 ]);
-                $data = [
+
+                $table = 'loc_countries';
+                $inputArr = [
                     'country_name' => $request->country_name,
                     'country_code' => $request->country_code,
                     'created_by' => Auth::user()->id,
                     'updated_by' => Auth::user()->id,
                 ];
-                //store the record in the transaction_classes table
-                $insertId = $this->country->storeRecord($data);
+
+                $insertId = $this->common->commonSave($table, $inputArr);
 
                 if ($insertId) {
                     return response()->json(['status' => 'success', 'message' => 'Country  added successfully' , 'data' => ['id' => $insertId]], 200);
@@ -100,33 +93,27 @@ class LocationController extends Controller
 
     public function deleteCountry($id)
     {
-        $record = $this->country->getSingleRecord($id);
-        if ($record) {
-            $data = [
-                'status' => 'delete',
-                'updated_by' => Auth::user()->id,
-            ];
-            $this->country->destroyRecord($id, $data);
-            return response()->json(['status' => 'success', 'message' => 'Country deleted successfully',  'data' => ['id' => $id]], 200);
-        } else {
-            return response()->json(['status' => 'error', 'message' => 'Failed deleting country', 'data' => []], 404);
-        }
+        $whereArr = ['id' => $id];
+        $title = 'Country';
+        $table = 'loc_countries';
+
+        return $this->common->commonDelete($id, $whereArr, $title, $table);
     }
 
     public function getAllCountries()
     {
-        $countries = $this->country->where('status', '!=', 'delete')->get();
+        $table = 'loc_countries';
+        $fields = '*';
+        $countries = $this->common->commonGetAll($table, $fields);
         return response()->json(['data' => $countries], 200);
     }
 
-    public function getCountryByCountryId($id)
-    {
-        $data = $this->country->getSingleRecord($id);
-        if ($data) {
-            return response()->json(['country' => $data[0]], 200);
-        } else {
-            return response()->json(['message' => 'No industry Found'], 404);
-        }
+    public function getCountryByCountryId($id){
+        $idColumn = 'id';
+        $table = 'loc_countries';
+        $fields = '*';
+        $countries = $this->common->commonGetById($id, $idColumn, $table, $fields);
+        return response()->json(['data' => $countries], 200);
     }
 
     //================================================================================================================================
@@ -140,14 +127,16 @@ class LocationController extends Controller
                     'province_name' => 'required',
                     'country_id' => 'required',
                 ]);
-                $data = [
+
+                $table = 'loc_provinces';
+                $inputArr = [
                     'province_name' => $request->province_name,
                     'country_id' => $request->country_id,
                     'created_by' => Auth::user()->id,
                     'updated_by' => Auth::user()->id,
                 ];
-                //store the record in the transaction_classes table
-                $insertId = $this->province->storeRecord($data);
+                
+                $insertId = $this->common->commonSave($table, $inputArr);
 
                 if ($insertId) {
                     return response()->json(['status' => 'success', 'message' => 'Province added successfully' , 'data' => ['id' => $insertId]], 200);
@@ -182,22 +171,20 @@ class LocationController extends Controller
 
     public function deleteProvince($id)
     {
-        $record = $this->province->getSingleRecord($id);
-        if ($record) {
-            $data = [
-                'status'     => 'delete',
-                'updated_by' => Auth::user()->id,
-            ];
-            $this->province->destroyRecord($id, $data);
-            return response()->json(['status' => 'success', 'message' => 'Province deleted successfully',  'data' => ['id' => $id]], 200);
-        } else {
-            return response()->json(['status' => 'error', 'message' => 'Failed deleting province', 'data' => []], 404);
-        }
+        $whereArr = ['id' => $id];
+        $title = 'Province';
+        $table = 'loc_provinces';
+
+        return $this->common->commonDelete($id, $whereArr, $title, $table);
     }
 
     public function getAllProvinces()
     {
-        $provinces = $this->province->where('status', '!=', 'delete')->get();
+        $table = 'loc_provinces';
+        $fields = ['loc_provinces.*', 'loc_provinces.id as id', 'loc_countries.country_name'];
+        $joinsArr = ['loc_countries' => ['loc_countries.id', '=', 'loc_provinces.country_id']];
+        $whereArr = ['loc_countries.status' => 'active'];
+        $provinces = $this->common->commonGetAll($table, $fields, $joinsArr, $whereArr);
         return response()->json(['data' => $provinces], 200);
     }
 
@@ -215,14 +202,16 @@ class LocationController extends Controller
                     'city_name' => 'required',
                     'province_id' => 'required',
                 ]);
-                $data = [
+
+                $table = 'loc_cities';
+                $inputArr = [
                     'city_name' => $request->city_name,
                     'province_id' => $request->province_id,
                     'created_by' => Auth::user()->id,
                     'updated_by' => Auth::user()->id,
                 ];
-                //store the record in the transaction_classes table
-                $insertId = $this->city->storeRecord($data);
+                
+                $insertId = $this->common->commonSave($table, $inputArr);
 
                 if ($insertId) {
                     return response()->json(['status' => 'success', 'message' => 'City  added successfully' , 'data' => ['id' => $insertId]], 200);
@@ -257,23 +246,26 @@ class LocationController extends Controller
 
     public function deleteCity($id)
     {
-        $record = $this->city->getSingleRecord($id);
-        if ($record) {
-            $data = [
-                'status'          => 'delete',
-                'updated_by' => Auth::user()->id,
-            ];
-            $this->city->destroyRecord($id, $data);
-            return response()->json(['status' => 'success', 'message' => 'City deleted successfully',  'data' => ['id' => $id]], 200);
-        } else {
-            return response()->json(['status' => 'error', 'message' => 'Failed deleting city', 'data' => []], 404);
-        }
+        $whereArr = ['id' => $id];
+        $title = 'City';
+        $table = 'loc_cities';
+
+        return $this->common->commonDelete($id, $whereArr, $title, $table);
     }
 
-    
     public function getAllCities()
     {
-        $cities = $this->city->where('status', '!=', 'delete')->get();
+        $table = 'loc_cities';
+        $fields = ['loc_cities.*', 'loc_cities.id as id', 'loc_provinces.province_name'];
+        $joinsArr = [
+            'loc_provinces' => ['loc_provinces.id', '=', 'loc_cities.province_id'],
+            'loc_countries' => ['loc_countries.id', '=', 'loc_provinces.country_id'],
+        ];
+        $whereArr = [
+            'loc_provinces.status' => 'active',
+            'loc_countries.status' => 'active'
+        ];
+        $cities = $this->common->commonGetAll($table, $fields, $joinsArr, $whereArr);
         return response()->json(['data' => $cities], 200);
     }
 
