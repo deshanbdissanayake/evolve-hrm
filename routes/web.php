@@ -70,6 +70,11 @@ Route::group(['middleware' => ['role:super-admin|admin']], function() {
         return view('company/station/index');
     })->name('station.index');
 
+    Route::get('/currencies', function () {
+        return view('company/currencies/currencies_add');
+    })->name('currencies.index');
+
+
 });
 
 

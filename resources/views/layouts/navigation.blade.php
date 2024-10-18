@@ -29,12 +29,12 @@
         <div class="container-fluid">
 
             <div id="two-column-menu"></div>
-            
+
             <!-- Main Navigation -->
             <ul class="navbar-nav" id="navbar-nav">
 
                 <li class="menu-title"><span>Menu</span></li>
-                
+
                 <!-- Dashboard -->
                 <li class="nav-item">
                     <a class="nav-link menu-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
@@ -144,7 +144,7 @@
                             </li>
                         </ul>
                     </div>
-                </li>    
+                </li>
 
                 <!-- Company -->
                 <li class="nav-item">
@@ -161,6 +161,7 @@
                             <li class="nav-item"><a href="#" class="nav-link">Wage Groups</a></li>
                             <li class="nav-item"><a href="#" class="nav-link">Hierarchy</a></li>
                             <li class="nav-item"><a href="#" class="nav-link">Permission Groups</a></li>
+                            <li class="nav-item"><a href="{{ route('currencies.index') }}" class="nav-link">Currencies</a></li>
                         </ul>
                     </div>
                 </li>
