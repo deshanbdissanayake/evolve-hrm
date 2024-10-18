@@ -1,100 +1,186 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
-    <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-            <div class="flex">
-                <!-- Logo -->
-                <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
+<!-- ========== App Menu ========== -->
+<div class="app-menu navbar-menu">
+    <!-- LOGO -->
+    <div class="navbar-brand-box">
+        <!-- Dark Logo-->
+        <a href="{{ route('dashboard') }}" class="logo logo-dark">
+            <span class="logo-sm">
+                <img src="{{ asset('assets/images/logo-sm.png') }}" alt="" height="22">
+            </span>
+            <span class="logo-lg">
+                <img src="{{ asset('assets/images/logo-dark.png') }}" alt="" height="auto">
+            </span>
+        </a>
+        <!-- Light Logo-->
+        <a href="{{ route('dashboard') }}" class="logo logo-light">
+            <span class="logo-sm">
+                <img src="{{ asset('assets/images/logo-sm-light.png') }}" alt="" height="22">
+            </span>
+            <span class="logo-lg">
+                <img src="{{ asset('assets/images/logo-light.png') }}" alt="" height="auto">
+            </span>
+        </a>
+        <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover" id="vertical-hover">
+            <i class="ri-record-circle-line"></i>
+        </button>
+    </div>
+
+    <div id="scrollbar">
+        <div class="container-fluid">
+
+            <div id="two-column-menu"></div>
+
+            <!-- Main Navigation -->
+            <ul class="navbar-nav" id="navbar-nav">
+
+                <li class="menu-title"><span>Menu</span></li>
+
+                <!-- Dashboard -->
+                <li class="nav-item">
+                    <a class="nav-link menu-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
+                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Dashboard</span>
                     </a>
-                </div>
+                </li>
 
-                <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-                </div>
-            </div>
+                <!-- Attendance -->
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#attendance" data-bs-toggle="collapse" role="button" aria-expanded="false">
+                        <i class="ri-time-line"></i> <span>Attendance</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="attendance">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item"><a href="#" class="nav-link">My Time Sheet</a></li>
+                            <li class="nav-item"><a href="#" class="nav-link">Punches</a></li>
+                            <li class="nav-item"><a href="#" class="nav-link">Mass Punch</a></li>
+                            <li class="nav-item"><a href="#" class="nav-link">Requests</a></li>
+                            <li class="nav-item"><a href="#" class="nav-link">Apply Leaves</a></li>
+                        </ul>
+                    </div>
+                </li>
 
-            <!-- Settings Dropdown -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
-                <x-dropdown align="right" width="48">
-                    <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                            <div>{{ Auth::user()->name }}</div>
+                <!-- Schedule -->
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#schedule" data-bs-toggle="collapse" role="button" aria-expanded="false">
+                        <i class="ri-calendar-line"></i> <span>Schedule</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="schedule">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item"><a href="#" class="nav-link">My Schedule</a></li>
+                            <li class="nav-item"><a href="#" class="nav-link">Mass Schedule</a></li>
+                        </ul>
+                    </div>
+                </li>
 
-                            <div class="ms-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                        </button>
-                    </x-slot>
+                <!-- Policies -->
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#policies" data-bs-toggle="collapse" role="button" aria-expanded="false">
+                        <i class="ri-file-paper-line"></i> <span>Policies</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="policies">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item"><a href="#" class="nav-link">Policy Groups</a></li>
+                            <li class="nav-item"><a href="#" class="nav-link">Schedule Policies</a></li>
+                            <li class="nav-item"><a href="#" class="nav-link">Rounding Policies</a></li>
+                            <li class="nav-item"><a href="#" class="nav-link">Meal Policies</a></li>
+                        </ul>
+                    </div>
+                </li>
 
-                    <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
+                <!-- Employees -->
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#employees" data-bs-toggle="collapse" role="button" aria-expanded="false">
+                        <i class="ri-user-line"></i> <span>Employees</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="employees">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item"><a href="#" class="nav-link">Add New Employee</a></li>
+                            <li class="nav-item"><a href="#" class="nav-link">Employee List</a></li>
+                            <li class="nav-item"><a href="#" class="nav-link">My Details</a></li>
+                            <li class="nav-item"><a href="#" class="nav-link">Messages</a></li>
+                        </ul>
+                    </div>
+                </li>
 
-                        <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
+                <!-- Reports -->
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#reports" data-bs-toggle="collapse" role="button" aria-expanded="false">
+                        <i class="ri-bar-chart-line"></i> <span>Reports</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="reports">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item"><a href="#" class="nav-link">EPF Report</a></li>
+                            <li class="nav-item"><a href="#" class="nav-link">Employee Report</a></li>
+                        </ul>
+                    </div>
+                </li>
 
-                            <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                {{ __('Log Out') }}
-                            </x-dropdown-link>
-                        </form>
-                    </x-slot>
-                </x-dropdown>
-            </div>
+                <!-- Payroll -->
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#payroll" data-bs-toggle="collapse" role="button" aria-expanded="false">
+                        <i class="ri-money-dollar-circle-line"></i> <span>Payroll</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="payroll">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item"><a href="#" class="nav-link">End of Pay Period</a></li>
+                            <li class="nav-item"><a href="#" class="nav-link">Pay Stub Amendment</a></li>
+                            <li class="nav-item"><a href="#" class="nav-link">Pay Period Schedule</a></li>
+                            <li class="nav-item"><a href="#" class="nav-link">Pay Stub Account</a></li>
+                        </ul>
+                    </div>
+                </li>
 
-            <!-- Hamburger -->
-            <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
-                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
+                <!-- Settings Dropdown -->
+                <li class="nav-item">
+                    <a class="nav-link menu-link {{ request()->routeIs('profile.*') || request()->routeIs('permissions.*') ? 'active' : '' }}" href="#sidebarSettings" data-bs-toggle="collapse" role="button" aria-expanded="{{ request()->routeIs('profile.*') || request()->routeIs('permissions.*') ? 'true' : 'false' }}" aria-controls="sidebarSettings">
+                        <i class="ri-apps-2-line"></i> <span data-key="t-settings">Settings</span>
+                    </a>
+                    <div class="collapse menu-dropdown {{ request()->routeIs('profile.*') || request()->routeIs('permissions.*') ? 'show' : '' }}" id="sidebarSettings">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{{ route('profile.edit') }}" class="nav-link {{ request()->routeIs('profile.edit') ? 'active' : '' }}"> Profile </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('permissions.index') }}" class="nav-link {{ request()->routeIs('permissions.*') ? 'active' : '' }}"> Permissions </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                <!-- Company -->
+                <li class="nav-item">
+                    <a class="nav-link menu-link {{ request()->routeIs('company.*') ? 'active' : '' }}" href="#company" data-bs-toggle="collapse" role="button" aria-expanded="{{ request()->routeIs('company.*') ? 'true' : 'false' }}">
+                        <i class="ri-building-line"></i> <span>Company</span>
+                    </a>
+                    <div class="collapse menu-dropdown {{ request()->routeIs('company.*') ? 'show' : '' }}" id="company">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item"><a href="{{ route('company.index') }}" class="nav-link {{ request()->routeIs('company.index') ? 'active' : '' }}">Company Information</a></li>
+                            <li class="nav-item"><a href="{{ route('location.index') }}" class="nav-link {{ request()->routeIs('location.index') ? 'active' : '' }}">Locations</a></li>
+                            <li class="nav-item"><a href="#" class="nav-link">Branches/Departments</a></li>
+                            <li class="nav-item"><a href="#" class="nav-link">Stations</a></li>
+                            <li class="nav-item"><a href="#" class="nav-link">Designations</a></li>
+                            <li class="nav-item"><a href="#" class="nav-link">Wage Groups</a></li>
+                            <li class="nav-item"><a href="#" class="nav-link">Hierarchy</a></li>
+                            <li class="nav-item"><a href="#" class="nav-link">Permission Groups</a></li>
+                            <li class="nav-item"><a href="{{ route('currencies.index') }}" class="nav-link">Currencies</a></li>
+                        </ul>
+                    </div>
+                </li>
+
+                <!-- Logout -->
+                <li class="nav-item">
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <a class="nav-link menu-link" href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();">
+                            <i class="ri-logout-box-line"></i> <span data-key="t-logout">Log Out</span>
+                        </a>
+                    </form>
+                </li>
+
+            </ul>
         </div>
+        <!-- Sidebar -->
     </div>
 
-    <!-- Responsive Navigation Menu -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
-        </div>
-
-        <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-gray-200">
-            <div class="px-4">
-                <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
-            </div>
-
-            <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
-                </x-responsive-nav-link>
-
-                <!-- Authentication -->
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-
-                    <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                        {{ __('Log Out') }}
-                    </x-responsive-nav-link>
-                </form>
-            </div>
-        </div>
-    </div>
-</nav>
+    <div class="sidebar-background"></div>
+</div>
+<!-- ========== End App Menu ========== -->

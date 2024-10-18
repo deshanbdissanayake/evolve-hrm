@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use  Spatie\Permission\Models\Permission;
 
@@ -17,7 +18,7 @@ class PermissionController extends Controller
 
     public function index()
     {
-        $permissions = Permission::get();
+        $permissions = Permission::orderBy('type')->get()->groupBy('type');
         return view('role-permission.permission.index', ['permissions' => $permissions]);
     }
 
@@ -33,11 +34,16 @@ class PermissionController extends Controller
                 'required',
                 'string',
                 'unique:permissions,name'
+            ],
+            'type' => [
+                'required',
+                'string'
             ]
         ]);
 
         Permission::create([
-            'name' => $request->name
+            'name' => $request->name,
+            'type' => $request->type, 
         ]);
 
         return redirect('permissions')->with('status','Permission Created Successfully');
@@ -45,7 +51,10 @@ class PermissionController extends Controller
 
     public function edit(Permission $permission)
     {
-        return view('role-permission.permission.edit', ['permission' => $permission]);
+        return view('role-permission.permission.edit', [
+            'permission' => $permission, 
+            'type' => $permission->type
+        ]);
     }
 
     public function update(Request $request, Permission $permission)
@@ -55,11 +64,16 @@ class PermissionController extends Controller
                 'required',
                 'string',
                 'unique:permissions,name,'.$permission->id
+            ],
+            'type' => [
+                'required',
+                'string'
             ]
         ]);
 
         $permission->update([
-            'name' => $request->name
+            'name' => $request->name,
+            'type' => $request->type
         ]);
 
         return redirect('permissions')->with('status','Permission Updated Successfully');

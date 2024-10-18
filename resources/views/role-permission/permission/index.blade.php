@@ -33,20 +33,25 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($permissions as $permission)
-                                <tr>
-                                    <td>{{ $permission->id }}</td>
-                                    <td>{{ $permission->name }}</td>
-                                    <td>
-                                        @can('update permission')
-                                        <a href="{{ url('permissions/'.$permission->id.'/edit') }}" class="btn btn-success">Edit</a>
-                                        @endcan
+                                @foreach($permissions as $type => $permissionsGroup)
+                                    <tr>
+                                        <td colspan="3">{{ $type }}</td>
+                                    </tr>
+                                    @foreach ($permissionsGroup as $permission)
+                                    <tr>
+                                        <td>{{ $permission->id }}</td>
+                                        <td>{{ $permission->name }}</td>
+                                        <td>
+                                            @can('update permission')
+                                            <a href="{{ url('permissions/'.$permission->id.'/edit') }}" class="btn btn-success">Edit</a>
+                                            @endcan
 
-                                        @can('delete permission')
-                                        <a href="{{ url('permissions/'.$permission->id.'/delete') }}" class="btn btn-danger mx-2">Delete</a>
-                                        @endcan
-                                    </td>
-                                </tr>
+                                            @can('delete permission')
+                                            <a href="{{ url('permissions/'.$permission->id.'/delete') }}" class="btn btn-danger mx-2">Delete</a>
+                                            @endcan
+                                        </td>
+                                    </tr>
+                                    @endforeach
                                 @endforeach
                             </tbody>
                         </table>
