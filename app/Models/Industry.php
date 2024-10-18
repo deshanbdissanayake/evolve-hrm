@@ -9,7 +9,7 @@ use App\Models\CommonModel;
 class Industry extends Model
 {
     use HasFactory;
-    protected $table = 'industries';
+    protected $table = 'com_industries';
 
    /**
      * The attributes that are mass assignable.
@@ -34,27 +34,27 @@ class Industry extends Model
     }
     public function storeRecord($data)
     {
-        return $this->common->storeRecord('industries', $data);
+        return $this->common->storeRecord('com_industries', $data);
     }
     public function updateRecord($id, $data)
     {
     
-        return $this->common->updateRecord('industries', $id, $data);
+        return $this->common->updateRecord('com_industries', $id, $data);
     }
     public function getAllRecords()
     {
-        $data = $this->common->getAllRecords('industries');
+        $data = $this->common->getAllRecords('com_industries');
         return $data;
     }
 
     public function getSingleRecord($id)
     {
-        $data = $this->common->getSingleRecord('industries', $id);
+        $data = $this->common->getSingleRecord('com_industries', $id);
         return $data;
     }
      
     public function destroyRecord($id, $data)
     {
-        return $this->common->destroyRecord('industries', $id, $data);
+        return $this->common->destroyRecord('com_industries', $id, $data);
     }
 }

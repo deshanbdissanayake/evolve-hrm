@@ -11,7 +11,7 @@ class Country extends Model
 {
     use HasFactory;
     // Table associated with the model
-    protected $table = 'countries';
+    protected $table = 'loc_countries';
 
     protected $fillable = [
         'id',
@@ -43,7 +43,7 @@ class Country extends Model
      */
     public function storeRecord($data)
     {
-        return $this->common->storeRecord('countries', $data);
+        return $this->common->storeRecord('loc_countries', $data);
     }
 
     /**
@@ -55,7 +55,7 @@ class Country extends Model
      */
     public function updateRecord($id, $data)
     {
-        return $this->common->updateRecord('countries', $id, $data);
+        return $this->common->updateRecord('loc_countries', $id, $data);
     }
 
     /**
@@ -65,7 +65,7 @@ class Country extends Model
      */
     public function getAllRecords()
     {
-        return $this->common->getAllRecords('countries');
+        return $this->common->getAllRecords('loc_countries');
     }
 
     /**
@@ -76,7 +76,7 @@ class Country extends Model
      */
     public function getSingleRecord($id)
     {
-        return $this->common->getSingleRecord('countries', $id);
+        return $this->common->getSingleRecord('loc_countries', $id);
     }
 
     /**
@@ -88,6 +88,6 @@ class Country extends Model
      */
     public function destroyRecord($id, $data)
     {
-        return $this->common->destroyRecord('countries', $id, $data);
+        return $this->common->destroyRecord('loc_countries', $id, $data);
     }
 }

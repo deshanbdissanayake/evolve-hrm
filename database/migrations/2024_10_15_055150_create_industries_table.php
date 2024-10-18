@@ -11,18 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('industries', function (Blueprint $table) {
-            $table->id('id');
+
+        Schema::create('com_industries', function (Blueprint $table) {
+            $table->id();
             $table->string('industry_name');
-            $table->string('status')->nullable(); // Example: New field$table->dateTime('created_at');
-            $table->dateTime('created_date')->nullable();
+
+            $table->string('status')->default('active')->nullable();
+            $table->timestamp('created_at')->useCurrent();
             $table->integer('created_by')->nullable();
-            $table->dateTime('updated_date')->nullable();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
             $table->integer('updated_by')->nullable();
-            $table->dateTime('deleted_date')->nullable();
-            $table->integer('deleted_by')->nullable();
-            $table->timestamps();
         });
+        
     }
 
     /**
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('industries');
+        Schema::dropIfExists('com_industries');
     }
 };

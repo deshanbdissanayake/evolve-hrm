@@ -29,10 +29,11 @@ class CityController extends Controller
     public function index()
     {
         $cities = City::all(); // Fetch all students
-        return view('cities.index', ['cities' => $cities]);
+        return view('location.index');
     }
+    
     public function create(Request $request)
-     {
+    {
         try {
             return DB::transaction(function () use ($request) {
                 $request->validate([
@@ -58,17 +59,16 @@ class CityController extends Controller
         } catch (\Illuminate\Database\QueryException $e) {
             return response()->json(['message' => 'Error occurred due to ' . $e->getMessage(), 'error_code' => 500], 500);
         }
-     }
+    }
 
-     public function edit($id)
-     {
+    public function edit($id)
+    {
          $student = City::findOrFail($id);
          return 'cities.edit';
-     }
+    }
  
-     
-     public function update(Request $request, $id)
-     {
+    public function update(Request $request, $id)
+    {
         $request->validate([
             'country_name' => 'required',
             // 'company_id' => 'required',
@@ -87,20 +87,20 @@ class CityController extends Controller
         } else {
             return response()->json(['message' => 'No city Found', 'data' => []], 404);
         }
-     }
+    }
 
-     public function show($id)
-     {
+    public function show($id)
+    {
         $data = $this->city->getSingleRecord($id);
         if ($data) {
             return response()->json(['city' => $data[0]], 200);
         } else {
             return response()->json(['message' => 'No city Found'], 404);
         }
-     }
+    }
 
-     public function delete($id)
-     {
+    public function delete($id)
+    {
         $record = $this->city->getSingleRecord($id);
         if ($record) {
             $data = [
@@ -113,5 +113,5 @@ class CityController extends Controller
         } else {
             return response()->json(['message' => 'No city Found', 'data' => []], 404);
         }
-     }
+    }
 }

@@ -31,8 +31,9 @@ class ProvinceController extends Controller
         $provinces = Province::all(); // Fetch all students
         return view('provinces.index', ['provinces' => $provinces]);
     }
+
     public function create(Request $request)
-     {
+    {
         try {
             return DB::transaction(function () use ($request) {
                 $request->validate([
@@ -57,17 +58,17 @@ class ProvinceController extends Controller
         } catch (\Illuminate\Database\QueryException $e) {
             return response()->json(['message' => 'Error occurred due to ' . $e->getMessage(), 'error_code' => 500], 500);
         }
-     }
+    }
 
-     public function edit($id)
-     {
+    public function edit($id)
+    {
          $student = Province::findOrFail($id);
          return 'provinces.edit';
-     }
+    }
  
      
-     public function update(Request $request, $id)
-     {
+    public function update(Request $request, $id)
+    {
         $request->validate([
             'province_name' => 'required',
         ]);
@@ -85,20 +86,20 @@ class ProvinceController extends Controller
         } else {
             return response()->json(['message' => 'No Department Found', 'data' => []], 404);
         }
-     }
+    }
 
-     public function show($id)
-     {
+    public function show($id)
+    {
         $data = $this->province->getSingleRecord($id);
         if ($data) {
             return response()->json(['province' => $data[0]], 200);
         } else {
             return response()->json(['message' => 'No province Found'], 404);
         }
-     }
+    }
 
-     public function delete($id)
-     {
+    public function delete($id)
+    {
         $record = $this->province->getSingleRecord($id);
         if ($record) {
             $data = [
@@ -111,5 +112,5 @@ class ProvinceController extends Controller
         } else {
             return response()->json(['message' => 'No province Found', 'data' => []], 404);
         }
-     }
+    }
 }

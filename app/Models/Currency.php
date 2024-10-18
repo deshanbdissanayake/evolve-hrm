@@ -12,7 +12,7 @@ class Currency extends Model
     use HasFactory;
 
     // Table associated with the model
-    protected $table = 'currencies';
+    protected $table = 'com_currencies';
 
     // Fields that are mass assignable
     protected $fillable = [
@@ -48,7 +48,7 @@ class Currency extends Model
      */
     public function storeRecord($data)
     {
-        return $this->common->storeRecord('currencies', $data);
+        return $this->common->storeRecord('com_currencies', $data);
     }
 
     /**
@@ -60,7 +60,7 @@ class Currency extends Model
      */
     public function updateRecord($id, $data)
     {
-        return $this->common->updateRecord('currencies', $id, $data);
+        return $this->common->updateRecord('com_currencies', $id, $data);
     }
 
     /**
@@ -70,7 +70,7 @@ class Currency extends Model
      */
     public function getAllRecords()
     {
-        return $this->common->getAllRecords('currencies');
+        return $this->common->getAllRecords('com_currencies');
     }
 
     /**
@@ -81,7 +81,7 @@ class Currency extends Model
      */
     public function getSingleRecord($id)
     {
-        return $this->common->getSingleRecord('currencies', $id);
+        return $this->common->getSingleRecord('com_currencies', $id);
     }
 
     /**
@@ -93,6 +93,6 @@ class Currency extends Model
      */
     public function destroyRecord($id, $data)
     {
-        return $this->common->destroyRecord('currencies', $id, $data);
+        return $this->common->destroyRecord('com_currencies', $id, $data);
     }
 }

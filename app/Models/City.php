@@ -11,7 +11,7 @@ use App\Models\CommonModel;
 class City extends Model
 {
     use HasFactory;
-    protected $table = 'cities';
+    protected $table = 'loc_cities';
 
     protected $fillable = [
         'id',
@@ -43,7 +43,7 @@ class City extends Model
      */
     public function storeRecord($data)
     {
-        return $this->common->storeRecord('cities', $data);
+        return $this->common->storeRecord('loc_cities', $data);
     }
 
     /**
@@ -55,7 +55,7 @@ class City extends Model
      */
     public function updateRecord($id, $data)
     {
-        return $this->common->updateRecord('cities', $id, $data);
+        return $this->common->updateRecord('loc_cities', $id, $data);
     }
 
     /**
@@ -65,7 +65,7 @@ class City extends Model
      */
     public function getAllRecords()
     {
-        return $this->common->getAllRecords('cities');
+        return $this->common->getAllRecords('loc_cities');
     }
 
     /**
@@ -76,7 +76,7 @@ class City extends Model
      */
     public function getSingleRecord($id)
     {
-        return $this->common->getSingleRecord('cities', $id);
+        return $this->common->getSingleRecord('loc_cities', $id);
     }
 
     /**
@@ -88,6 +88,6 @@ class City extends Model
      */
     public function destroyRecord($id, $data)
     {
-        return $this->common->destroyRecord('cities', $id, $data);
+        return $this->common->destroyRecord('loc_cities', $id, $data);
     }
 }

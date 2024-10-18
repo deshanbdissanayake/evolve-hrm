@@ -87,7 +87,7 @@ class CompanyController extends Controller
     }
 
     public function update(Request $request, $id)
-     {
+    {
         $request->validate([
             'company_name' => 'required',
         ]);
@@ -125,20 +125,20 @@ class CompanyController extends Controller
         } else {
             return response()->json(['message' => 'No Company Found', 'data' => []], 404);
         }
-     }
+    }
 
-     public function show($id)
-     {
+    public function show($id)
+    {
         $data = $this->company->getSingleRecord($id);
         if ($data) {
             return response()->json(['Company' => $data[0]], 200);
         } else {
             return response()->json(['message' => 'No Company Found'], 404);
         }
-     }
+    }
 
-     public function delete($id)
-     {
+    public function delete($id)
+    {
         $record = $this->company->getSingleRecord($id);
         if ($record) {
             $data = [
@@ -151,5 +151,5 @@ class CompanyController extends Controller
         } else {
             return response()->json(['message' => 'No Company Found', 'data' => []], 404);
         }
-     }
+    }
 }

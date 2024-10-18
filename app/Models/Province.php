@@ -11,7 +11,7 @@ class Province extends Model
 {
     use HasFactory;
 
-    protected $table = 'provinces';
+    protected $table = 'loc_provinces';
 
     protected $fillable = [
         'id',
@@ -43,7 +43,7 @@ class Province extends Model
      */
     public function storeRecord($data)
     {
-        return $this->common->storeRecord('provinces', $data);
+        return $this->common->storeRecord('loc_provinces', $data);
     }
 
     /**
@@ -55,7 +55,7 @@ class Province extends Model
      */
     public function updateRecord($id, $data)
     {
-        return $this->common->updateRecord('provinces', $id, $data);
+        return $this->common->updateRecord('loc_provinces', $id, $data);
     }
 
     /**
@@ -65,7 +65,7 @@ class Province extends Model
      */
     public function getAllRecords()
     {
-        return $this->common->getAllRecords('provinces');
+        return $this->common->getAllRecords('loc_provinces');
     }
 
     /**
@@ -76,7 +76,7 @@ class Province extends Model
      */
     public function getSingleRecord($id)
     {
-        return $this->common->getSingleRecord('provinces', $id);
+        return $this->common->getSingleRecord('loc_provinces', $id);
     }
 
     /**
@@ -88,6 +88,6 @@ class Province extends Model
      */
     public function destroyRecord($id, $data)
     {
-        return $this->common->destroyRecord('provinces', $id, $data);
+        return $this->common->destroyRecord('loc_provinces', $id, $data);
     }
 }
